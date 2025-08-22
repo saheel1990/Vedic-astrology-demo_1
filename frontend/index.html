@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Vedic Astrology Demo</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <!-- GA4 placeholder: replace MEASUREMENT_ID -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=MEASUREMENT_ID"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'MEASUREMENT_ID'); // replace with real ID
+  </script>
+  <style>
+    body{font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding: 24px; max-width:760px; margin:auto;}
+    input, button { padding:8px; font-size: 14px; margin:6px 0; width:100%;}
+    .card{border:1px solid #e6e6e6;padding:16px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.03);}
+  </style>
+</head>
+<body>
+  <h1>Vedic Astrology Blueprint — Demo</h1>
+  <div class="card">
+    <label>Name<input id="name" value="Test User"/></label>
+    <label>Birth (ISO) <input id="birth" value="1990-04-20T05:25:00"/></label>
+    <label>Latitude <input id="lat" value="16.7"/></label>
+    <label>Longitude <input id="lon" value="74.2"/></label>
+    <button id="btn">Generate Sample Chart</button>
+    <pre id="out"></pre>
+  </div>
+  <script>
+    const out = document.getElementById('out');
+    document.getElementById('btn').addEventListener('click', async () => {
+      const payload = {
+        name: document.getElementById('name').value,
+        birth_iso: document.getElementById('birth').value,
+        lat: parseFloat(document.getElementById('lat').value) || 0,
+        lon: parseFloat(document.getElementById('lon').value) || 0
+      };
+      out.textContent = "Calling API...";
+      try {
+        const res = await fetch('http://localhost:8000/chart', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        out.textContent = JSON.stringify(data, null, 2);
+      } catch (e) {
+        out.textContent = 'Error: ' + e;
+      }
+    });
+  </script>
+</body>
+</html>
